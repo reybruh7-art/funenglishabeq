@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Listening Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen p-4 flex flex-col items-center">
+
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-5 my-auto">
+    <!-- Header -->
+    <header class="text-center">
+      <h1 class="text-2xl font-black text-indigo-600">Listening Lab 🎧</h1>
+      <p class="text-xs text-slate-500">Latih pendengaran bahasa Inggrismu</p>
+    </header>
+
+    <!-- Pilihan Mode / Tab -->
+    <div class="flex bg-slate-100 p-1 rounded-xl text-sm font-semibold">
+      <button id="tabListeningBtn" class="flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition">Listening</button>
+      <button id="tabQuizBtn" class="flex-1 py-2 rounded-lg text-slate-500 transition">Kuis</button>
+    </div>
+
+    <!-- VIEW 1: MODE LISTENING -->
+    <div id="listeningSection" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Pilih Level (Panjang Kata):</label>
+        <div id="levelContainer" class="grid grid-cols-5 gap-1.5 text-xs font-semibold"></div>
+      </div>
+
+      <div class="bg-slate-50 border rounded-xl p-5 text-center space-y-4">
+        <span id="itemIndicator" class="text-xs font-medium text-slate-400">Item 1</span>
+
+        <div>
+          <button id="playBtn" class="bg-indigo-600 active:scale-95 text-white font-bold px-6 py-3 rounded-full shadow-md text-base w-full">
+            🔊 Putar Audio
+          </button>
+        </div>
+
+        <!-- Atur Tempo -->
+        <div class="flex items-center justify-center gap-2 text-xs">
+          <span class="text-slate-400 font-medium">Tempo:</span>
+          <button class="tempo-btn px-2.5 py-1 rounded border font-semibold border-slate-200" data-speed="0.75">0.75x</button>
+          <button class="tempo-btn px-2.5 py-1 rounded border font-semibold bg-indigo-50 border-indigo-500 text-indigo-600" data-speed="1.0">1.0x</button>
+          <button class="tempo-btn px-2.5 py-1 rounded border font-semibold border-slate-200" data-speed="1.25">1.25x</button>
+        </div>
+
+        <!-- Reveal Text -->
+        <div class="pt-2 border-t border-slate-200">
+          <button id="toggleSentenceBtn" class="text-xs text-indigo-600 font-bold underline">
+            Lihat Kalimat
+          </button>
+          <p id="sentenceDisplay" class="hidden mt-2 font-bold text-slate-700 text-lg"></p>
+        </div>
+      </div>
+
+      <!-- Navigasi Prev/Next -->
+      <div class="flex justify-between items-center text-sm font-semibold">
+        <button id="prevBtn" class="px-4 py-2 border rounded-xl active:bg-slate-50">⬅ Prev</button>
+        <button id="nextBtn" class="px-4 py-2 bg-slate-800 text-white rounded-xl active:bg-slate-900">Next ➡</button>
+      </div>
+    </div>
+
+    <!-- VIEW 2: MODE KUIS -->
+    <div id="quizSection" class="hidden space-y-4 text-center">
+      <span id="quizIndicator" class="text-xs font-medium text-slate-400">Soal 1</span>
+      
+      <button id="playQuizBtn" class="bg-indigo-600 active:scale-95 text-white font-bold px-5 py-2.5 rounded-full shadow-md text-sm w-full">
+        🔊 Dengarkan Kalimat
+      </button>
+
+      <div class="p-4 bg-slate-50 border rounded-xl">
+        <p id="quizDisplaySentence" class="text-lg font-bold text-slate-700 tracking-wide"></p>
+      </div>
+
+      <div class="flex gap-2">
+        <input id="quizInput" type="text" placeholder="Ketik kata yang hilang..." class="flex-1 border rounded-xl px-3 py-2 text-sm focus:outline-indigo-500">
+        <button id="checkQuizBtn" class="bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-sm active:bg-emerald-700">Cek</button>
+      </div>
+
+      <p id="quizFeedback" class="text-xs font-bold min-h-[1.25rem]"></p>
+
+      <button id="nextQuizBtn" class="w-full py-2.5 bg-slate-800 text-white rounded-xl text-sm font-semibold active:bg-slate-900">
+        Soal Selanjutnya ➡
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const sentencesData = {
+      "1": [{ text: "Listen!" }, { text: "Wait." }, { text: "Stop." }],
+      "2": [{ text: "Come here." }, { text: "Good morning." }, { text: "Sit down." }],
+      "3": [{ text: "I love you." }, { text: "Open the door." }, { text: "Turn it off." }],
+      "4": [{ text: "Can you hear me?" }, { text: "See you next time." }, { text: "What is your name?" }],
+      "5": [{ text: "I want to eat lunch." }, { text: "Where do you live now?" }],
+      "6": [{ text: "She likes to drink fresh milk." }],
+      "7": [{ text: "We are going to the mall today." }],
+      "8": [{ text: "He forgot to bring his umbrella this morning." }],
+      "9": [{ text: "They have been studying English together every single night." }],
+      "10": [{ text: "If you need any help please feel free to ask." }]
+    };
+
+    const quizData = [
+      { fullText: "She wants to drink coffee.", display: "She wants to _____ coffee.", target: "drink" },
+      { fullText: "Please turn on the light.", display: "Please turn on the _____.", target: "light" },
+      { fullText: "Where did you put my keys?", display: "Where did you _____ my keys?", target: "put" }
+    ];
+
+    let currentLevel = "1";
+    let currentIndex = 0;
+    let tempo = 1.0;
+    let quizIndex = 0;
+
+    function speak(text, speed) {
+      if (!('speechSynthesis' in window)) return alert("Browser tidak mendukung speech.");
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = speed;
+      window.speechSynthesis.speak(u);
+    }
+
+    const lvlBox = document.getElementById("levelContainer");
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = `${i} Kata`;
+      btn.className = `p-1.5 rounded-lg border ${i == 1 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-50 text-slate-700'}`;
+      btn.onclick = () => {
+        currentLevel = String(i);
+        currentIndex = 0;
+        Array.from(lvlBox.children).forEach(b => b.className = 'p-1.5 rounded-lg border bg-slate-50 text-slate-700');
+        btn.className = 'p-1.5 rounded-lg border bg-indigo-600 text-white border-indigo-600';
+        updateListeningView();
+      };
+      lvlBox.appendChild(btn);
+    }
+
+    function updateListeningView() {
+      const list = sentencesData[currentLevel] || [];
+      const item = list[currentIndex] || { text: "-" };
+      document.getElementById("itemIndicator").textContent = `Level ${currentLevel} Kata • Item ${currentIndex + 1} / ${list.length}`;
+      document.getElementById("sentenceDisplay").textContent = item.text;
+      document.getElementById("sentenceDisplay").classList.add("hidden");
+      document.getElementById("toggleSentenceBtn").textContent = "Lihat Kalimat";
+      document.getElementById("prevBtn").disabled = currentIndex === 0;
+      document.getElementById("nextBtn").disabled = currentIndex >= list.length - 1;
+    }
+
+    document.getElementById("playBtn").onclick = () => {
+      const list = sentencesData[currentLevel] || [];
+      if (list[currentIndex]) speak(list[currentIndex].text, tempo);
+    };
+
+    document.getElementById("toggleSentenceBtn").onclick = () => {
+      const el = document.getElementById("sentenceDisplay");
+      const isHidden = el.classList.toggle("hidden");
+      document.getElementById("toggleSentenceBtn").textContent = isHidden ? "Lihat Kalimat" : "Sembunyikan Kalimat";
+    };
+
+    document.getElementById("nextBtn").onclick = () => {
+      if (currentIndex < (sentencesData[currentLevel] || []).length - 1) {
+        currentIndex++;
+        updateListeningView();
+      }
+    };
+
+    document.getElementById("prevBtn").onclick = () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateListeningView();
+      }
+    };
+
+    document.querySelectorAll(".tempo-btn").forEach(btn => {
+      btn.onclick = () => {
+        tempo = parseFloat(btn.dataset.speed);
+        document.querySelectorAll(".tempo-btn").forEach(b => b.className = "tempo-btn px-2.5 py-1 rounded border font-semibold border-slate-200");
+        btn.className = "tempo-btn px-2.5 py-1 rounded border font-semibold bg-indigo-50 border-indigo-500 text-indigo-600";
+      };
+    });
+
+    function updateQuizView() {
+      const q = quizData[quizIndex];
+      document.getElementById("quizIndicator").textContent = `Soal ${quizIndex + 1} / ${quizData.length}`;
+      document.getElementById("quizDisplaySentence").textContent = q.display;
+      document.getElementById("quizInput").value = "";
+      document.getElementById("quizFeedback").textContent = "";
+    }
+
+    document.getElementById("playQuizBtn").onclick = () => speak(quizData[quizIndex].fullText, 1.0);
+
+    document.getElementById("checkQuizBtn").onclick = () => {
+      const val = document.getElementById("quizInput").value.trim().toLowerCase();
+      const target = quizData[quizIndex].target.toLowerCase();
+      const fb = document.getElementById("quizFeedback");
+      if (val === target) {
+        fb.className = "text-xs font-bold text-emerald-600";
+        fb.textContent = "🎉 Benar sekali!";
+      } else {
+        fb.className = "text-xs font-bold text-rose-600";
+        fb.textContent = `❌ Salah. Jawabannya: ${quizData[quizIndex].target}`;
+      }
+    };
+
+    document.getElementById("nextQuizBtn").onclick = () => {
+      if (quizIndex < quizData.length - 1) {
+        quizIndex++;
+        updateQuizView();
+      } else {
+        alert("Kamu sudah menyelesaikan semua soal kuis!");
+      }
+    };
+
+    document.getElementById("tabListeningBtn").onclick = () => {
+      document.getElementById("listeningSection").classList.remove("hidden");
+      document.getElementById("quizSection").classList.add("hidden");
+      document.getElementById("tabListeningBtn").className = "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition";
+      document.getElementById("tabQuizBtn").className = "flex-1 py-2 rounded-lg text-slate-500 transition";
+    };
+
+    document.getElementById("tabQuizBtn").onclick = () => {
+      document.getElementById("listeningSection").classList.add("hidden");
+      document.getElementById("quizSection").classList.remove("hidden");
+      document.getElementById("tabQuizBtn").className = "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition";
+      document.getElementById("tabListeningBtn").className = "flex-1 py-2 rounded-lg text-slate-500 transition";
+      updateQuizView();
+    };
+
+    updateListeningView();
+  </script>
+</body>
+</html>
