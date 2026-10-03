@@ -1,0 +1,39 @@
+{
+  "sentences": {
+    "1": [
+      { "text": "Listen!" },
+      { "text": "Wait." },
+      { "text": "Stop." },
+      { "text": "Look!" },
+      { "text": "Run!" }
+      // ... total 100 butir (1 kata)
+    ],
+    "2": [
+      { "text": "Come here." },
+      { "text": "Good morning." },
+      { "text": "Sit down." },
+      { "text": "Stand up." }
+      // ... total 100 butir (2 kata)
+    ],
+    "3": [
+      { "text": "I love you." },
+      { "text": "Open the door." },
+      { "text": "Turn it off." }
+      // ... total 100 butir (3 kata)
+    ]
+    // ... sampai level 10 (masing-masing 100 kalimat)
+  },
+  "quiz": [
+    {
+      "fullText": "She wants to drink coffee.",
+      "display": "She wants to _____ coffee.",
+      "target": "drink"
+    },
+    {
+      "fullText": "Please turn on the light.",
+      "display": "Please turn on the _____.",
+      "target": "light"
+    }
+    // ... total 100 butir kuis
+  ]
+}
