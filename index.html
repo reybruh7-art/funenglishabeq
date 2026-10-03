@@ -12,32 +12,35 @@
     <!-- Header -->
     <header class="text-center">
       <h1 class="text-2xl font-black text-indigo-600">Listening Lab 🎧</h1>
-      <p class="text-xs text-slate-500">Latih pendengaran bahasa Inggrismu</p>
+      <p class="text-xs text-slate-500">1.000 Latihan Kalimat & 100 Kuis Rumpang</p>
     </header>
 
-    <!-- Pilihan Mode / Tab -->
+    <!-- Navigasi Tab -->
     <div class="flex bg-slate-100 p-1 rounded-xl text-sm font-semibold">
-      <button id="tabListeningBtn" class="flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition">Listening</button>
-      <button id="tabQuizBtn" class="flex-1 py-2 rounded-lg text-slate-500 transition">Kuis</button>
+      <button id="tabListeningBtn" class="flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition">Listening (1-10 Kata)</button>
+      <button id="tabQuizBtn" class="flex-1 py-2 rounded-lg text-slate-500 transition">Kuis (100 Soal)</button>
     </div>
 
-    <!-- VIEW 1: MODE LISTENING -->
+    <!-- VIEW 1: LISTENING -->
     <div id="listeningSection" class="space-y-4">
       <div>
-        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Pilih Level (Panjang Kata):</label>
+        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Pilih Level Panjang Kalimat:</label>
         <div id="levelContainer" class="grid grid-cols-5 gap-1.5 text-xs font-semibold"></div>
       </div>
 
       <div class="bg-slate-50 border rounded-xl p-5 text-center space-y-4">
-        <span id="itemIndicator" class="text-xs font-medium text-slate-400">Item 1</span>
+        <div class="flex justify-between items-center text-xs font-medium text-slate-400">
+          <span id="itemIndicator">Item 1 / 100</span>
+          <span id="levelIndicatorBadge" class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded font-bold">1 Kata</span>
+        </div>
 
         <div>
-          <button id="playBtn" class="bg-indigo-600 active:scale-95 text-white font-bold px-6 py-3 rounded-full shadow-md text-base w-full">
+          <button id="playBtn" class="bg-indigo-600 active:scale-95 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-full shadow-md text-base w-full transition">
             🔊 Putar Audio
           </button>
         </div>
 
-        <!-- Atur Tempo -->
+        <!-- Tempo -->
         <div class="flex items-center justify-center gap-2 text-xs">
           <span class="text-slate-400 font-medium">Tempo:</span>
           <button class="tempo-btn px-2.5 py-1 rounded border font-semibold border-slate-200" data-speed="0.75">0.75x</button>
@@ -45,75 +48,117 @@
           <button class="tempo-btn px-2.5 py-1 rounded border font-semibold border-slate-200" data-speed="1.25">1.25x</button>
         </div>
 
-        <!-- Reveal Text -->
+        <!-- Opsi Tampilkan Kalimat -->
         <div class="pt-2 border-t border-slate-200">
           <button id="toggleSentenceBtn" class="text-xs text-indigo-600 font-bold underline">
-            Lihat Kalimat
+            Tampilkan Kalimat Sesungguhnya
           </button>
-          <p id="sentenceDisplay" class="hidden mt-2 font-bold text-slate-700 text-lg"></p>
+          <p id="sentenceDisplay" class="hidden mt-3 font-bold text-slate-800 text-lg leading-relaxed transition"></p>
         </div>
       </div>
 
       <!-- Navigasi Prev/Next -->
       <div class="flex justify-between items-center text-sm font-semibold">
-        <button id="prevBtn" class="px-4 py-2 border rounded-xl active:bg-slate-50">⬅ Prev</button>
-        <button id="nextBtn" class="px-4 py-2 bg-slate-800 text-white rounded-xl active:bg-slate-900">Next ➡</button>
+        <button id="prevBtn" class="px-4 py-2 border rounded-xl active:bg-slate-50 disabled:opacity-40">⬅ Prev</button>
+        <button id="nextBtn" class="px-4 py-2 bg-slate-800 text-white rounded-xl active:bg-slate-900 disabled:opacity-40">Next ➡</button>
       </div>
     </div>
 
-    <!-- VIEW 2: MODE KUIS -->
+    <!-- VIEW 2: KUIS -->
     <div id="quizSection" class="hidden space-y-4 text-center">
-      <span id="quizIndicator" class="text-xs font-medium text-slate-400">Soal 1</span>
+      <div class="flex justify-between items-center text-xs font-medium text-slate-400">
+        <span id="quizIndicator">Soal 1 / 100</span>
+        <span id="quizScoreBadge" class="text-emerald-600 font-bold">Skor: 0</span>
+      </div>
       
-      <button id="playQuizBtn" class="bg-indigo-600 active:scale-95 text-white font-bold px-5 py-2.5 rounded-full shadow-md text-sm w-full">
-        🔊 Dengarkan Kalimat
+      <button id="playQuizBtn" class="bg-indigo-600 active:scale-95 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-full shadow-md text-sm w-full transition">
+        🔊 Dengarkan Kalimat Utuh
       </button>
 
       <div class="p-4 bg-slate-50 border rounded-xl">
         <p id="quizDisplaySentence" class="text-lg font-bold text-slate-700 tracking-wide"></p>
       </div>
 
-      <div class="flex gap-2">
-        <input id="quizInput" type="text" placeholder="Ketik kata yang hilang..." class="flex-1 border rounded-xl px-3 py-2 text-sm focus:outline-indigo-500">
-        <button id="checkQuizBtn" class="bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-sm active:bg-emerald-700">Cek</button>
-      </div>
+      <form id="quizForm" class="flex gap-2">
+        <input id="quizInput" type="text" autocomplete="off" placeholder="Ketik kata yang hilang..." class="flex-1 border rounded-xl px-3 py-2 text-sm focus:outline-indigo-500">
+        <button type="submit" class="bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-sm active:bg-emerald-700 transition">Cek</button>
+      </form>
 
       <p id="quizFeedback" class="text-xs font-bold min-h-[1.25rem]"></p>
 
-      <button id="nextQuizBtn" class="w-full py-2.5 bg-slate-800 text-white rounded-xl text-sm font-semibold active:bg-slate-900">
-        Soal Selanjutnya ➡
-      </button>
+      <div class="flex justify-between items-center text-sm font-semibold">
+        <button id="prevQuizBtn" class="px-4 py-2 border rounded-xl active:bg-slate-50 disabled:opacity-40">⬅ Prev</button>
+        <button id="nextQuizBtn" class="px-4 py-2 bg-slate-800 text-white rounded-xl active:bg-slate-900 disabled:opacity-40">Next ➡</button>
+      </div>
     </div>
 
   </div>
 
   <script>
-    const sentencesData = {
-      "1": [{ text: "Listen!" }, { text: "Wait." }, { text: "Stop." }],
-      "2": [{ text: "Come here." }, { text: "Good morning." }, { text: "Sit down." }],
-      "3": [{ text: "I love you." }, { text: "Open the door." }, { text: "Turn it off." }],
-      "4": [{ text: "Can you hear me?" }, { text: "See you next time." }, { text: "What is your name?" }],
-      "5": [{ text: "I want to eat lunch." }, { text: "Where do you live now?" }],
-      "6": [{ text: "She likes to drink fresh milk." }],
-      "7": [{ text: "We are going to the mall today." }],
-      "8": [{ text: "He forgot to bring his umbrella this morning." }],
-      "9": [{ text: "They have been studying English together every single night." }],
-      "10": [{ text: "If you need any help please feel free to ask." }]
+    // --- GENERATOR DATA 1.000 KALIMAT (10 LEVEL X 100 ITEM) ---
+    const rawBank = {
+      1: ["Listen!", "Look!", "Stop!", "Wait!", "Run!", "Jump!", "Smile!", "Speak!", "Quiet!", "Help!", "Go!", "Come!", "Think!", "Try!", "Relax!", "Begin!", "Watch!", "Focus!", "Breathe!", "Stand!", "Sleep!", "Wake!", "Read!", "Write!", "Drink!", "Eat!", "Walk!", "Hurry!", "Cheer!", "Answer!", "Ask!", "Notice!", "Understand!", "Drive!", "Follow!", "Rest!", "Careful!", "Decide!", "Remember!", "Forget!", "Choose!", "Check!", "Enjoy!", "Finish!", "Start!", "Learn!", "Practice!", "Continue!", "Repeat!", "Change!", "Believe!", "Imagine!", "Explore!", "Create!", "Build!", "Fix!", "Discover!", "Share!", "Save!", "Open!", "Close!", "Hold!", "Push!", "Pull!", "Join!", "Leave!", "Arrive!", "Return!", "Accept!", "Agree!", "Refuse!", "Allow!", "Cancel!", "Confirm!", "Connect!", "Deliver!", "Explain!", "Grow!", "Guide!", "Improve!", "Inform!", "Inspire!", "Invite!", "Manage!", "Observe!", "Organize!", "Prepare!", "Protect!", "Provide!", "Reach!", "Receive!", "Remain!", "Remind!", "Support!", "Teach!", "Travel!", "Trust!", "Warn!", "Wish!", "Succeed!"],
+      2: ["Come here.", "Good morning.", "Sit down.", "Stand up.", "Thank you.", "Be quiet.", "Hurry up.", "Look out.", "Wake up.", "Calm down.", "Hold on.", "Step back.", "Listen closely.", "Speak clearly.", "Walk slowly.", "Think twice.", "Stay here.", "Go away.", "Drive safely.", "Sleep well.", "Take care.", "Watch out.", "Turn around.", "Move forward.", "Keep going.", "Start now.", "Try again.", "Work hard.", "Smile often.", "Eat well.", "Drink water.", "Breathe deeply.", "Read more.", "Write down.", "Feel free.", "Have patience.", "Stay strong.", "Be honest.", "Stay positive.", "Never surrender.", "Always learn.", "Keep trying.", "Stay safe.", "Help others.", "Show respect.", "Be kind.", "Save time.", "Dream big.", "Work smart.", "Trust me.", "Follow me.", "Ask questions.", "Check twice.", "Think fast.", "Act wisely.", "Learn daily.", "Stay calm.", "Speak louder.", "Wait outside.", "Come inside.", "Call later.", "Answer quickly.", "Begin today.", "Open wide.", "Stay sharp.", "Be brave.", "Choose wisely.", "Look ahead.", "Listen carefully.", "Stay humble.", "Practice daily.", "Speak kindly.", "Walk together.", "Run faster.", "Rest now.", "Breathe easily.", "Stay focused.", "Never stop.", "Feel confident.", "Stand firm.", "Keep quiet.", "Look around.", "Stay ready.", "Move quickly.", "Think clearly.", "Work together.", "Stay curious.", "Learn more.", "Speak truth.", "Be gentle.", "Live simply.", "Laugh often.", "Give thanks.", "Love deeply.", "Stay hopeful.", "Act immediately.", "Remain calm.", "Keep moving.", "Finish strong.", "Start fresh."],
+      3: ["I love you.", "Open the door.", "Turn it off.", "Turn it on.", "Close the window.", "Can you help?", "Please sit down.", "Where are you?", "How are you?", "I am ready.", "Take your time.", "Let us go.", "See you soon.", "What is that?", "Who is coming?", "Time is up.", "Do your best.", "Never give up.", "Believe in yourself.", "Keep it simple.", "This is easy.", "I hear you.", "Call me later.", "Wait for me.", "Tell the truth.", "Read this book.", "Drink fresh water.", "Eat your breakfast.", "Write your name.", "Drive the car.", "Listen to me.", "Look at this.", "Make it right.", "Do not worry.", "Keep moving forward.", "Enjoy your meal.", "Have a seat.", "Turn the page.", "Follow the rules.", "Ask a question.", "Give me time.", "Take a break.", "Wash your hands.", "Clean your room.", "Check the answer.", "Find your way.", "Hold my hand.", "Stand by me.", "Watch your step.", "Keep the change.", "Bring it here.", "Send the letter.", "Start the engine.", "Stop the car.", "Show me how.", "Learn every day.", "Speak the truth.", "Keep your promise.", "Choose your path.", "Help your friends.", "Share your ideas.", "Trust your heart.", "Enjoy the journey.", "Save some money.", "Work very hard.", "Practice makes perfect.", "Open your mind.", "Clear your head.", "Count the stars.", "Sing a song.", "Dance with me.", "Paint the wall.", "Cook some food.", "Buy the ticket.", "Pay the bill.", "Lock the gate.", "Answer the phone.", "Check the clock.", "Catch the ball.", "Throw the trash.", "Turn left here.", "Turn right now.", "Walk with us.", "Run very fast.", "Rest for now.", "Feel the breeze.", "Taste the soup.", "Smell the flowers.", "Hear the music.", "Watch the movie.", "Read the newspaper.", "Drink warm tea.", "Eat sweet fruits.", "Drive safe today.", "Sleep tight tonight.", "Wake up early.", "Be very careful.", "Stay right there.", "Finish your work.", "Start your day."],
+      4: ["Can you hear me?", "See you next time.", "What is your name?", "Where do you live?", "I want to sleep.", "Please close the door.", "It is very cold.", "The sun is shining.", "We can do this.", "Time flies so fast.", "He likes to read.", "She drinks black coffee.", "They are coming tomorrow.", "I have a question.", "Where is my phone?", "Everything will be fine.", "You look very happy.", "Do you know him?", "Take care of yourself.", "I need some help.", "Let us eat lunch.", "This is my friend.", "We love good music.", "The food is delicious.", "Call me tomorrow morning.", "I work every day.", "She plays the piano.", "He runs every morning.", "They study English together.", "Turn off the lights.", "Clean up your desk.", "Write down your thoughts.", "Listen to the teacher.", "Open your English book.", "Walk in the park.", "Drink a cold beverage.", "The water is cold.", "It is raining outside.", "The weather is nice.", "I will call you.", "Please tell the truth.", "We need more time.", "Check your email now.", "Save your important files.", "Help me with this.", "Practice speaking every day.", "He drives very fast.", "She cooks tasty meals.", "They live in London.", "I understand your point.", "Look at the sky.", "Birds are singing loudly.", "Keep up good work.", "Always do your best.", "Never lose your hope.", "Find a quiet place.", "Read a good story.", "Learn something new today.", "Share with your friends.", "Give him a hand.", "Take a deep breath.", "Stay safe at home.", "I can see clearly.", "The train is coming.", "The bus arrives late.", "We must leave now.", "Wait for a minute.", "Speak with great confidence.", "He bought new shoes.", "She wrote a letter.", "They watched the game.", "The dog is barking.", "The cat is sleeping.", "Open the front gate.", "Lock all the doors.", "Wash your hands thoroughly.", "Prepare your own breakfast.", "Clean the kitchen floor.", "Put on your coat.", "Take off your shoes.", "Turn on the television.", "Switch off the radio.", "Listen to this song.", "Enjoy your weekend break.", "Drive with great care.", "Walk down this street.", "Follow the clear instructions.", "Ask for more details.", "Answer all the questions.", "Check the exact time.", "Finish your homework tonight.", "Begin the new project.", "Stay focused on goals.", "Make a great choice.", "Live a happy life.", "Smile at every person.", "Learn from past mistakes.", "Keep your mind open.", "Trust in your ability."],
+      5: ["I want to eat lunch.", "Where do you live now?", "She likes to drink tea.", "He is reading a book.", "We are learning English together.", "Can you please help me?", "It is a beautiful day.", "They will arrive very soon.", "I need to go home.", "Please speak a little louder.", "The coffee is very hot.", "I forgot to bring it.", "She can play the guitar.", "He works in a bank.", "They walked to the park.", "We have a big family.", "You did a great job.", "Never stop learning new things.", "Time is running out fast.", "Where can I find it?", "I really like this place.", "Let us take a break.", "He drives a blue car.", "She bought a new dress.", "They are watching a movie.", "I will call you tonight.", "Always follow your own dreams.", "The birds are singing outside.", "Keep your room clean always.", "Open the window right now.", "We must finish this today.", "Do you have any questions?", "I love to travel abroad.", "He speaks three different languages.", "She writes in her journal.", "The weather is very pleasant.", "Practice makes your skills better.", "Drink plenty of water daily.", "Eat healthy food every day.", "Walk around the peaceful lake.", "Listen to what they say.", "Take care of your health.", "We should start the meeting.", "He solved the math problem.", "She baked a delicious cake.", "They visited the ancient museum.", "I am proud of you.", "Keep working on your goals.", "Success requires a lot effort.", "Education opens many great doors.", "The child is playing outside.", "My dog loves running around.", "The stars look bright tonight.", "The ocean looks so calm.", "The flowers smell very sweet.", "Read five pages every night.", "Write down all your dreams.", "Stay focused on your study.", "Be polite to every person.", "Help people whenever you can.", "Listen carefully to the instructions.", "Practice English with your friends.", "The teacher explained the lesson.", "The student understood the topic.", "The sun rises every morning.", "The moon shines so bright.", "Always tell the exact truth.", "Check your answers once again.", "Never give up your hope.", "Life is full of surprises.", "Learn something useful every day.", "Make time for your family.", "Enjoy every single little moment.", "He cleaned his entire room.", "She cooked dinner for us.", "They traveled across the country.", "We built a strong team.", "Think carefully before you speak.", "Choose the best possible option.", "Work smart and stay humble.", "Exercise keeps your body fit.", "Reading books expands your mind.", "Music brings people together easily.", "Nature provides peace and quiet.", "Technology changes the world fast.", "Consistency brings great long results.", "Start your day with energy.", "Finish your tasks on time.", "Be kind to everyone today.", "Always believe in your strength.", "Stay positive through hard times.", "The train arrived on time.", "The flight was very smooth.", "She painted a lovely picture.", "He repaired the broken bicycle.", "We enjoyed the delicious dinner.", "Knowledge is the greatest power.", "Time waits for no man.", "Keep moving toward your dreams."],
+      6: ["She likes to drink fresh milk.", "We are going to the mall.", "He forgot to bring his jacket.", "They will visit us next week.", "I want to learn English quickly.", "Can you speak a bit slower?", "The children are playing outside happily.", "Please turn off the computer now.", "It is raining very hard today.", "You should take a short rest.", "I read a very interesting book.", "He drives his car very carefully.", "She works hard every single day.", "They bought a new modern house.", "We must protect our natural environment.", "Time moves faster than we think.", "Practice every day to become fluent.", "Where did you buy that shirt?", "He helped his friend yesterday morning.", "She cooked a very tasty dinner.", "Always remember to be very kind.", "The teacher answered all our questions.", "We enjoyed walking in the garden.", "I will finish this task tomorrow.", "Never stop dreaming about your future.", "The train arrives at six o'clock.", "He likes listening to classical music.", "She writes articles for the magazine.", "They traveled around the whole world.", "Success comes to those who work.", "Drink clean water every single day.", "Eat more fruits and green vegetables.", "Exercise will keep your body healthy.", "Knowledge helps you make good decisions.", "The sun is rising right now.", "The night sky is completely clear.", "He repaired the old wooden table.", "She baked bread for her family.", "They are building a new school.", "We need to save more money.", "Listen closely to the audio sound.", "Read this short story out loud.", "Write your answers on the paper.", "Think carefully before making a choice.", "Keep moving forward despite any challenges.", "Be grateful for what you have.", "Share your happiness with other people.", "The cat slept on the sofa.", "The dog barked at the stranger.", "Flowers bloom in the warm spring.", "The ocean waves were very strong.", "He found his lost car keys.", "She received a lovely birthday gift.", "We watched the beautiful sunset together.", "Hard work always brings good results.", "Patience is a very important virtue.", "Learn something new every single day.", "Stay focused on your main goal.", "Take care of your mental health.", "Do not worry about small mistakes.", "Speak clearly when you give presentations.", "They opened a new coffee shop.", "He finished his homework very early.", "She designed a modern mobile application.", "We walked along the sandy beach.", "The library has many great books.", "Birds fly high in the sky.", "The baby smiled at his mother.", "Always check your work for errors.", "Consistency is key to great success.", "The weather is very warm today.", "He plays basketball with his friends.", "She sings songs with great passion.", "They cleaned the entire city park.", "We should reduce our plastic waste.", "Time and health are very precious.", "Believe that you can achieve it.", "The train station was very crowded.", "She answered the phone immediately today.", "He solved the difficult puzzle easily.", "Keep your workstation clean and tidy.", "The food tasted sweet and spicy.", "We listened to an interesting podcast.", "Never give up on your ambitions.", "Every small step counts towards progress.", "Speak with clarity and deep confidence.", "The doctor examined the young patient.", "She planted roses in her garden.", "He bought fresh fruits yesterday evening.", "They completed the difficult assignment successfully.", "We celebrated his graduation last night.", "Always maintain a very positive mindset.", "Good sleep improves your daily focus.", "He typed the message very quickly.", "She shared her notes with classmates.", "They walked five miles this morning.", "Knowledge gives you tremendous inner strength.", "Enjoy the journey of continuous learning.", "Tomorrow brings brand new exciting opportunities."],
+      7: ["We are going to the mall today.", "He forgot to bring his umbrella today.", "She loves listening to the quiet rain.", "They have been studying for three hours.", "Can you please repeat that sentence again?", "The quick brown fox jumps over fences.", "I want to improve my listening skills.", "It is important to eat healthy breakfast.", "You should drink plenty of water daily.", "We will visit our grandparents this weekend.", "He decided to learn how to cook.", "She plays the piano very well indeed.", "They walked through the beautiful green forest.", "Always be kind to everyone you meet.", "Reading good books expands your personal knowledge.", "The morning train was delayed by rain.", "I cannot find where I put keys.", "Practice speaking English as often as possible.", "The little boy smiled at his teacher.", "We enjoyed the party until late night.", "She finished all her tasks on time.", "He works diligently to achieve his dreams.", "Traveling helps you see the whole world.", "Never be afraid to make small mistakes.", "The sun shines brightly in the sky.", "A warm cup of tea feels good.", "Listen carefully to every single spoken word.", "They built a lovely house near mountains.", "Success is the result of continuous effort.", "We took many pictures during our holiday.", "He answered every single question very correctly.", "She shared her favorite recipes with us.", "They are preparing for the final examination.", "Always tell the truth in every situation.", "The museum displays many ancient historic artifacts.", "Good habits lead to a successful life.", "Exercise regularly to keep yourself fully fit.", "He drove his car across the city.", "She wrote an inspiring story about courage.", "We walked together along the quiet river.", "Technology makes our daily lives much easier.", "The bird built a nest on tree.", "Patience will help you overcome any challenge.", "He solved the difficult puzzle all alone.", "She bought fresh vegetables from local market.", "They cleaned the entire house before noon.", "We must protect our planet for future.", "Kindness is a language everyone can hear.", "A good night sleep restores your energy.", "Start your day with a grateful heart.", "He repaired the broken door by himself.", "She designed an amazing website for business.", "They stayed at a very comfortable hotel.", "The students listened attentively to their teacher.", "Confidence comes from constant and hard practice.", "He explained the complex idea very clearly.", "She received an important letter this morning.", "We watched the stars in the night.", "Always respect the opinions of other people.", "The soup was warm and very delicious.", "He rode his bicycle to school today.", "She practiced playing violin for two hours.", "They planted flowers in the front yard.", "We should take care of our health.", "Time passes quickly when you are busy.", "He loves spending time with his family.", "She walked her dog around the neighborhood.", "They organized a very successful community event.", "Learning English requires patience and continuous effort.", "The train arrived exactly at five o'clock.", "He bought a brand new laptop yesterday.", "She wore a beautiful red cotton dress.", "They painted the wooden fence bright white.", "We enjoyed the quiet sound of nature.", "Always keep your promises to your friends.", "He found a peaceful spot to read.", "She made a delicious chocolate birthday cake.", "They visited the famous national science museum.", "We shared our stories around the campfire.", "Small daily improvements create great long results.", "He woke up early to watch sunrise.", "She typed the long report without errors.", "They swam in the clear blue sea.", "We walked slowly under the heavy rain.", "Knowledge will open many doors of opportunity.", "He spoke with a calm and tone.", "She listened to her favorite music playlist.", "They cleaned up the public city park.", "We should always help those in need.", "Every new day brings fresh new possibilities.", "He fixed the broken wooden kitchen chair.", "She practiced her speech in front mirror.", "They traveled to Japan during spring break.", "We had a wonderful picnic by lake.", "Believe in yourself and your true power.", "He wrote down his thoughts in journal.", "She guided the new students around campus.", "They worked together to finish the project.", "We learned many interesting facts about history.", "Keep going until you reach the finish."],
+      8: ["He forgot to bring his umbrella this morning.", "She has been working as a graphic designer.", "We are going to travel abroad next summer.", "You should always believe in your own abilities.", "They decided to move to a larger apartment.", "Listening to English podcasts will help you learn.", "The weather was cold and rainy all day.", "Can you please send me that document today?", "I have never seen such a beautiful sunset.", "Reading books is a great way to learn.", "He drove his car very carefully through traffic.", "She prepared a delicious dinner for her family.", "They completed the entire project ahead of schedule.", "Always remember to be polite to every person.", "The students are studying hard for final exams.", "We spent the weekend camping by the lake.", "He answered all the difficult questions with confidence.", "She plays the violin in the city orchestra.", "Walking every morning is very good for health.", "Technology has completely changed the way we communicate.", "Never give up when facing a hard challenge.", "They celebrated their tenth wedding anniversary last week.", "I need to buy some groceries this afternoon.", "The teacher explained the lesson in great detail.", "We enjoyed our wonderful vacation in the mountains.", "He fixed his broken bicycle all by himself.", "She wrote an inspiring article for the newspaper.", "Practice makes your listening comprehension skills much better.", "The sun was shining brightly over the fields.", "Kindness and honesty are two very important virtues.", "He woke up early to catch the train.", "She designed a modern mobile application for users.", "They spent hours talking about their future plans.", "We must protect the environment for future generations.", "Consistency is the key to mastering any skill.", "The little boy smiled happily at his parents.", "She loves spending quiet evenings at her home.", "He solved the complex mathematical equation without help.", "They walked five miles along the sandy beach.", "A healthy diet helps your body stay strong.", "He shared his valuable knowledge with the team.", "She bought a comfortable chair for her room.", "We watched an exciting football match last night.", "Always treat other people with respect and care.", "The company launched an innovative new tech product.", "He works very hard to achieve his dreams.", "She made a cup of hot herbal tea.", "They painted the living room a bright yellow.", "Learning a language opens many brand new doors.", "Take a deep breath and relax your mind.", "The train arrived right on schedule this afternoon.", "He loves taking long photographs of wild nature.", "She translated the entire document into English fluently.", "They attended the international conference in New York.", "We should always strive to become better people.", "His positive attitude inspired everyone in the office.", "She took notes during the important business meeting.", "They organized a charity run for the hospital.", "The warm coffee tasted especially delicious this morning.", "Knowledge gives you the confidence to speak clearly.", "He cleaned his entire apartment from top bottom.", "She practiced her speech several times before presenting.", "They traveled across Europe on a tight budget.", "We witnessed an incredible performance by the band.", "Small continuous improvements lead to massive future success.", "He found his lost wallet under the seat.", "She wrote a heartwarming poem for her mother.", "They planted fifty new trees in the park.", "We enjoyed fresh bread from the local bakery.", "Always keep an open mind towards new ideas.", "He repaired the leaky water pipe very quickly.", "She shared an inspiring message with her followers.", "They swam in the ocean during the morning.", "We gathered around the fire to stay warm.", "Patience will guide you through difficult personal times.", "He bought fresh fruits from the morning market.", "She listened to the podcast during her commute.", "They finished the difficult marathon in four hours.", "We watched the birds flying across the sky.", "Every single day offers an opportunity to learn.", "He spoke with great confidence during the interview.", "She helped the elderly lady carry her groceries.", "They planned a surprise party for their friend.", "We walked through the ancient historic city streets.", "True happiness comes from appreciating what you have.", "He solved the technical issue within ten minutes.", "She received a prestigious award for her work.", "They enjoyed a quiet afternoon in the park.", "We listened attentively to the wise old man.", "Good habits are the foundation of daily success.", "He wrote down his weekly goals in notebook.", "She loves listening to the birds in morning.", "They built a strong friendship over the years.", "We visited the famous art gallery in town.", "Stay curious and never stop exploring the world.", "He guided the tourists through the narrow streets.", "She made fresh juice from oranges and apples.", "They worked diligently to finish the group project.", "We watched the rain falling on the window.", "Confidence grows when you face your own fears."],
+      9: ["They have been studying English together every single night.", "She decided to start her own online business today.", "We should always make time for our beloved family.", "He loves drinking a hot cup of black coffee.", "It is important to practice your listening skills daily.", "The teacher gave clear instructions to all the students.", "I enjoy reading books in a quiet cozy room.", "They walked through the crowded streets of the city.", "You can achieve anything if you work hard enough.", "The morning sun was shining warmly on the grass.", "She prepared a very healthy meal for her children.", "He fixed the broken computer in less than hour.", "We had an amazing conversation about science and technology.", "Never let the fear of failure stop your progress.", "The train arrived right on time at the station.", "She plays the acoustic guitar with great natural skill.", "He answered every single phone call with great polite.", "They celebrated their team victory with a big party.", "Learning a foreign language requires a lot of patience.", "Always take good care of your own personal health.", "The little boy smiled happily when he saw mother.", "We spent the entire afternoon relaxing by the pool.", "He loves watching documentary films about history and nature.", "She wrote a very long and detailed research paper.", "They organized a successful charity event in their neighborhood.", "Small daily habits can create huge positive life changes.", "He drove his car slowly through the heavy rain.", "She always helps her classmates with their difficult homework.", "We watched the colorful birds flying across the sky.", "Knowledge and wisdom are the most valuable life treasures.", "He loves exploring new places during his summer vacation.", "She bought a beautiful painting from the local artist.", "They finished building the new house in three months.", "We must protect our forests and oceans from pollution.", "Confidence comes from constant preparation and daily hard work.", "The doctor advised him to get plenty of rest.", "She made a delicious chocolate cake for the party.", "They discussed the new project plans for two hours.", "We enjoyed listening to the live music performance yesterday.", "Always treat other people the way you want treated.", "He woke up early to watch the sunrise today.", "She typed the entire report without making any mistakes.", "They traveled around the world to learn new cultures.", "We had a wonderful picnic near the quiet lake.", "Patience will help you overcome any obstacle in life.", "He explained the complex topic in a simple manner.", "She received a special award for her outstanding dedication.", "They worked together as a team to win game.", "We should always be grateful for every single blessing.", "Success is the result of continuous and persistent efforts.", "He repaired the broken wooden table with his tools.", "She listened to English podcasts while commuting to work.", "They planted many colorful flowers in the front yard.", "We spent a relaxing evening watching our favorite movie.", "True happiness is found within yourself and simple moments.", "He solved the difficult puzzle in just five minutes.", "She shared her inspiring life story with the audience.", "They swam in the clear blue waters of island.", "We walked through the dense forest under the trees.", "Every new day brings fresh opportunities to become better.", "He bought fresh fruits and vegetables from the market.", "She wore a stunning blue dress to the ceremony.", "They celebrated their company anniversary with an elegant dinner.", "We enjoyed the peaceful atmosphere of the quiet countryside.", "Keep your focus on long term goals and dreams.", "He assisted the elderly man with his heavy luggage.", "She practiced her musical instrument for three full hours.", "They organized their work schedule to maximize daily productivity.", "We watched the heavy snow falling outside the window.", "A positive mindset attracts good things into your life.", "He found his lost car keys under the bed.", "She baked fresh bread that smelled absolutely wonderful today.", "They painted the walls of their room light blue.", "We shared our personal thoughts and ideas with everyone.", "Consistency and dedication are essential for achieving great success.", "He rode his bicycle through the peaceful mountain paths.", "She guided the visitors through the modern art museum.", "They completed the difficult marathon in under four hours.", "We watched the sun set slowly behind the hills.", "Never underestimate your own ability to create positive change.", "He wrote down his creative ideas in a notebook.", "She loves listening to the soothing sound of rain.", "They built a strong bridge across the wide river.", "We visited the historical castle during our family trip.", "Stay curious and keep asking questions about the world.", "He helped his younger brother solve the difficult riddle.", "She brewed fresh coffee for everyone in the office.", "They worked tirelessly to meet the strict project deadline.", "We enjoyed an evening walk along the quiet shoreline.", "Hard work will always pay off in the end.", "He fixed the broken door handle using simple tools.", "She delivered an excellent presentation at the annual meeting.", "They spent the weekend exploring the vibrant local markets.", "We learned many fascinating facts about the solar system.", "Kindness has the power to brighten someone whole day.", "He checked his email inbox early in the morning.", "She designed a clean and modern user interface today.", "They cleaned up the plastic waste from the beach.", "We listened attentively to the wise teacher advice today.", "Every small step forward brings you closer to goals."],
+      10: ["If you need any help please feel free to ask.", "She has been studying English every day for two years.", "We decided to spend our summer holiday in the mountains.", "He works very hard to provide a good life family.", "It is always important to maintain a healthy balanced diet.", "The teacher explained the difficult grammar lesson very clearly today.", "They bought a beautiful house located near the quiet lake.", "You should never give up on your biggest personal dreams.", "Listening to English every day will improve your speaking skills.", "The morning sun was shining brightly across the entire valley.", "We had an interesting discussion about modern technology and society.", "She loves reading novels while drinking a warm cup tea.", "He repaired his old bicycle so he could ride again.", "Always treat other people with kindness respect and deep honesty.", "They celebrated their graduation with friends and beloved family members.", "Small daily habits can lead to massive success over time.", "He drove his car very carefully along the winding road.", "She prepared a delicious dinner for all of her guests.", "We spent the whole weekend cleaning up the entire house.", "Never let fear prevent you from trying something completely new.", "The train arrived at the platform right on scheduled time.", "She plays the piano with great emotion and wonderful skill.", "He answered all the interview questions with great professional confidence.", "They worked together all night to finish the important project.", "Learning a new skill requires dedication patience and regular practice.", "Always remember to take good care of your mental health.", "The little girl was smiling happily at her new puppy.", "We enjoyed walking along the sandy beach during sunset yesterday.", "He loves watching nature documentaries about wild animals in Africa.", "She wrote an inspiring article for the local university newspaper.", "They organized a successful charity campaign for the city hospital.", "A positive mindset will help you overcome any difficult challenge.", "He drove his family to the countryside for a picnic.", "She always helps her younger brother with his math homework.", "We watched the bright stars shining in the dark night.", "True wisdom comes from learning from your own past mistakes.", "He loves exploring historic places during his summer vacation travels.", "She bought a colorful painting from a local street artist.", "They finished the construction of the new school building quickly.", "We must protect our planet by reducing our plastic waste.", "Confidence grows when you consistently step outside your comfort zone.", "The doctor advised the patient to get plenty of rest.", "She baked a fresh chocolate cake for the birthday party.", "They held an important meeting to discuss the company future.", "We had a wonderful time celebrating the festival with friends.", "Success belongs to those who work hard and stay patient.", "He fixed the broken wooden chair using his own tools.", "She listened to English podcasts while commuting to her office.", "They planted fifty new trees in the local community park.", "We spent a very peaceful afternoon reading by the river.", "Kindness is a language that everyone can easily understand well.", "He solved the complicated puzzle in less than five minutes.", "She shared her personal experience of living in another country.", "They swam in the warm ocean waters during the morning.", "We walked through the dense forest enjoying the fresh air.", "Every new day brings fresh opportunities to improve your life.", "He purchased fresh fruits and vegetables from the local market.", "She wore a stunning blue dress to the annual ceremony.", "They celebrated their team victory with an amazing dinner party.", "We enjoyed the quiet and peaceful atmosphere of the countryside.", "Keep your focus sharp on your long term career goals.", "He assisted the elderly woman with her heavy shopping bags.", "She practiced playing the violin for three hours every day.", "They organized their daily tasks to achieve the best results.", "We watched the heavy rain falling against the glass window.", "A healthy lifestyle requires both good food and regular exercise.", "He found his lost wallet under the car front seat.", "She wrote a heartwarming letter to her best childhood friend.", "They painted the walls of the community center bright colors.", "We shared our creative ideas during the brainstorming session today.", "Consistency and hard work will always lead to great achievements.", "He rode his bicycle through the quiet village every morning.", "She guided the visitors through the modern history city museum.", "They completed the difficult marathon in less than four hours.", "We watched the sun set slowly over the calm sea.", "Never underestimate the power of small daily steps toward progress.", "He wrote down his thoughts in his personal leather notebook.", "She loves listening to the soothing sound of falling rain.", "They built a strong bridge across the wide mountain river.", "We visited the ancient historical castle during our summer roadtrip.", "Stay curious and never stop learning about the wonderful world.", "He helped his friend prepare for the difficult driving test.", "She brewed fresh coffee for all the guests this morning.", "They worked tirelessly to complete the assignment before the deadline.", "We enjoyed a lovely evening walk around the quiet park.", "Hard work and dedication will always yield positive lasting results.", "He fixed the broken door handle using a small screwdriver.", "She gave an outstanding presentation at the international business conference.", "They spent the weekend exploring the vibrant local street markets.", "We learned many fascinating facts about our galaxy and universe.", "Always believe that tomorrow will bring better and brighter opportunities.", "He checked his email inbox early in the morning hours.", "She designed a clean and beautiful user interface for mobile.", "They collected all the plastic waste along the ocean beach.", "We listened attentively to the wise teacher advice this afternoon.", "Every small step forward brings you closer to your dreams.", "He cleaned the entire kitchen after preparing the family dinner.", "She shared helpful study tips with all of her classmates.", "They walked five miles along the scenic mountain trail today.", "Wisdom is knowing what to do next and doing it."]
     };
 
-    const quizData = [
-      { fullText: "She wants to drink coffee.", display: "She wants to _____ coffee.", target: "drink" },
-      { fullText: "Please turn on the light.", display: "Please turn on the _____.", target: "light" },
-      { fullText: "Where did you put my keys?", display: "Where did you _____ my keys?", target: "put" }
+    // Siapkan array data terstruktur
+    const sentencesData = {};
+    for (let lvl = 1; lvl <= 10; lvl++) {
+      sentencesData[String(lvl)] = rawBank[lvl].map((txt, idx) => ({ id: idx + 1, text: txt }));
+    }
+
+    // --- GENERATOR DATA 100 KUIS FILL IN THE BLANK ---
+    const rawQuizSentences = [
+      ["She wants to drink coffee.", "drink"], ["Please turn on the light.", "light"], ["Where did you put my keys?", "put"], ["He works in a large hospital.", "hospital"], ["They are playing soccer in the park.", "soccer"],
+      ["We need to buy some fresh bread.", "bread"], ["The sun rises in the morning.", "rises"], ["Listen to the music very carefully.", "music"], ["Open your book to page ten.", "book"], ["I forgot to bring my black umbrella.", "umbrella"],
+      ["She loves reading books every single night.", "reading"], ["He drives his car very carefully today.", "drives"], ["The water in the lake is cold.", "cold"], ["Always tell the truth to your friends.", "truth"], ["Practice makes your English speaking skills better.", "English"],
+      ["We should eat more fruits and vegetables.", "fruits"], ["He woke up early to catch train.", "train"], ["The birds are singing in the trees.", "singing"], ["Close the front door before you leave.", "door"], ["She baked a delicious chocolate birthday cake.", "chocolate"],
+      ["Traveling helps you see the entire world.", "traveling"], ["He solved the difficult math problem quickly.", "math"], ["They built a new house near river.", "house"], ["Never give up on your personal dreams.", "dreams"], ["Can you please help me with this?", "help"],
+      ["The coffee is too hot to drink.", "hot"], ["She plays the violin with great skill.", "violin"], ["We walked along the beautiful sandy beach.", "beach"], ["Clean your desk before starting your work.", "desk"], ["A healthy diet keeps your body strong.", "healthy"],
+      ["He wrote an inspiring letter to father.", "letter"], ["The night sky is full of stars.", "stars"], ["Always check your work for small mistakes.", "mistakes"], ["She answered all the questions very correctly.", "answered"], ["Time moves faster than we usually think.", "faster"],
+      ["He bought a comfortable chair for room.", "chair"], ["We enjoyed the quiet sound of nature.", "nature"], ["Kindness is a language everyone can understand.", "kindness"], ["She loves spending time with her family.", "family"], ["The teacher gave clear instructions to students.", "instructions"],
+      ["Stay focused on your daily learning goals.", "focused"], ["He repaired the broken bicycle by himself.", "bicycle"], ["They celebrated their team victory with dinner.", "victory"], ["The baby smiled happily at his mother.", "smiled"], ["Knowledge gives you confidence to speak clearly.", "confidence"],
+      ["He drank a glass of fresh milk.", "glass"], ["She wore a stunning red cotton dress.", "dress"], ["We watched an exciting football match yesterday.", "match"], ["Take a deep breath and relax now.", "breath"], ["Never lose your hope during hard times.", "hope"],
+      ["The library is a very quiet place.", "library"], ["He painted the wooden fence bright white.", "fence"], ["She teaches mathematics at the local school.", "teaches"], ["They swam in the clear blue sea.", "sea"], ["Always be polite to every single person.", "polite"],
+      ["He found his lost wallet under seat.", "wallet"], ["We must protect our planet from pollution.", "planet"], ["Consistency is the secret to true success.", "secret"], ["She loves the fresh smell of flowers.", "flowers"], ["He guided the tourists through the city.", "tourists"],
+      ["Drink plenty of water throughout the day.", "water"], ["She typed the report without any errors.", "report"], ["They walked through the green forest together.", "forest"], ["Believe in your own strength and power.", "strength"], ["The train arrived right on scheduled time.", "arrived"],
+      ["He likes listening to relaxing piano music.", "piano"], ["She shared her favorite recipe with us.", "recipe"], ["They organized a charity event for hospital.", "charity"], ["Good habits lead to a happier life.", "habits"], ["He woke up to see the sunrise.", "sunrise"],
+      ["The soup was warm and very delicious.", "soup"], ["She washed her hands before eating dinner.", "hands"], ["They discussed the project for two hours.", "discussed"], ["Education opens many great doors of opportunity.", "education"], ["He rode his bicycle along the river.", "bicycle"],
+      ["She received a lovely gift from friend.", "gift"], ["We sat around the warm evening campfire.", "campfire"], ["Patience will help you overcome any challenge.", "patience"], ["The dog barked loudly at the stranger.", "barked"], ["He cleared his head by taking walk.", "walk"],
+      ["She enjoys drinking warm tea before bed.", "tea"], ["They completed the marathon in four hours.", "marathon"], ["Always keep your promises to your friends.", "promises"], ["The flowers bloom in the warm spring.", "spring"], ["He checked his email inbox this morning.", "email"],
+      ["She designed a modern interface for users.", "interface"], ["We should reduce our single plastic waste.", "plastic"], ["He spoke with confidence during the interview.", "interview"], ["She helped the elderly lady cross street.", "street"], ["Every small step forward brings you closer.", "closer"],
+      ["The doctor examined the young patient carefully.", "patient"], ["He fixed the leaky water pipe quickly.", "pipe"], ["She delivered an outstanding speech at conference.", "speech"], ["They cleaned up the public city park.", "park"], ["True happiness comes from appreciating small things.", "happiness"],
+      ["He learned from his past personal mistakes.", "mistakes"], ["She planted colorful roses in her garden.", "roses"], ["They visited the famous national science museum.", "museum"], ["Stay curious and never stop learning things.", "curious"], ["Tomorrow brings brand new and exciting opportunities.", "opportunities"]
     ];
 
+    const quizData = rawQuizSentences.map((item, idx) => {
+      const full = item[0];
+      const target = item[1];
+      // Ganti kata target dengan underscore _____
+      const regex = new RegExp(`\\b${target}\\b`, "i");
+      const display = full.replace(regex, "_____");
+      return { id: idx + 1, fullText: full, display: display, target: target };
+    });
+
+    // --- STATE APLIKASI ---
     let currentLevel = "1";
     let currentIndex = 0;
     let tempo = 1.0;
     let quizIndex = 0;
+    let quizScore = 0;
+    let answeredQuestions = new Set();
 
+    // --- FUNGSI AUDIO (SPEECH SYNTHESIS) ---
     function speak(text, speed) {
-      if (!('speechSynthesis' in window)) return alert("Browser tidak mendukung speech.");
+      if (!('speechSynthesis' in window)) return alert("Browser tidak mendukung Text to Speech.");
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'en-US';
@@ -121,28 +166,35 @@
       window.speechSynthesis.speak(u);
     }
 
+    // --- INISIALISASI TOMBOL LEVEL (1-10 KATA) ---
     const lvlBox = document.getElementById("levelContainer");
     for (let i = 1; i <= 10; i++) {
       const btn = document.createElement("button");
       btn.textContent = `${i} Kata`;
-      btn.className = `p-1.5 rounded-lg border ${i == 1 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-50 text-slate-700'}`;
+      btn.id = `lvlBtn-${i}`;
+      btn.className = `p-1.5 rounded-lg border text-center transition ${i === 1 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-50 text-slate-700'}`;
       btn.onclick = () => {
         currentLevel = String(i);
         currentIndex = 0;
-        Array.from(lvlBox.children).forEach(b => b.className = 'p-1.5 rounded-lg border bg-slate-50 text-slate-700');
-        btn.className = 'p-1.5 rounded-lg border bg-indigo-600 text-white border-indigo-600';
+        for (let j = 1; j <= 10; j++) {
+          const b = document.getElementById(`lvlBtn-${j}`);
+          b.className = 'p-1.5 rounded-lg border text-center transition bg-slate-50 text-slate-700';
+        }
+        btn.className = 'p-1.5 rounded-lg border text-center transition bg-indigo-600 text-white border-indigo-600';
         updateListeningView();
       };
       lvlBox.appendChild(btn);
     }
 
+    // --- LOGIKA VIEW LISTENING ---
     function updateListeningView() {
       const list = sentencesData[currentLevel] || [];
       const item = list[currentIndex] || { text: "-" };
-      document.getElementById("itemIndicator").textContent = `Level ${currentLevel} Kata • Item ${currentIndex + 1} / ${list.length}`;
+      document.getElementById("itemIndicator").textContent = `Item ${currentIndex + 1} / ${list.length}`;
+      document.getElementById("levelIndicatorBadge").textContent = `${currentLevel} Kata`;
       document.getElementById("sentenceDisplay").textContent = item.text;
       document.getElementById("sentenceDisplay").classList.add("hidden");
-      document.getElementById("toggleSentenceBtn").textContent = "Lihat Kalimat";
+      document.getElementById("toggleSentenceBtn").textContent = "Tampilkan Kalimat Sesungguhnya";
       document.getElementById("prevBtn").disabled = currentIndex === 0;
       document.getElementById("nextBtn").disabled = currentIndex >= list.length - 1;
     }
@@ -155,7 +207,7 @@
     document.getElementById("toggleSentenceBtn").onclick = () => {
       const el = document.getElementById("sentenceDisplay");
       const isHidden = el.classList.toggle("hidden");
-      document.getElementById("toggleSentenceBtn").textContent = isHidden ? "Lihat Kalimat" : "Sembunyikan Kalimat";
+      document.getElementById("toggleSentenceBtn").textContent = isHidden ? "Tampilkan Kalimat Sesungguhnya" : "Sembunyikan Kalimat";
     };
 
     document.getElementById("nextBtn").onclick = () => {
@@ -172,6 +224,7 @@
       }
     };
 
+    // Tombol Pengatur Tempo
     document.querySelectorAll(".tempo-btn").forEach(btn => {
       btn.onclick = () => {
         tempo = parseFloat(btn.dataset.speed);
@@ -180,26 +233,39 @@
       };
     });
 
+    // --- LOGIKA VIEW KUIS ---
     function updateQuizView() {
       const q = quizData[quizIndex];
       document.getElementById("quizIndicator").textContent = `Soal ${quizIndex + 1} / ${quizData.length}`;
+      document.getElementById("quizScoreBadge").textContent = `Skor: ${quizScore}`;
       document.getElementById("quizDisplaySentence").textContent = q.display;
       document.getElementById("quizInput").value = "";
       document.getElementById("quizFeedback").textContent = "";
+      document.getElementById("prevQuizBtn").disabled = quizIndex === 0;
+      document.getElementById("nextQuizBtn").disabled = quizIndex >= quizData.length - 1;
     }
 
     document.getElementById("playQuizBtn").onclick = () => speak(quizData[quizIndex].fullText, 1.0);
 
-    document.getElementById("checkQuizBtn").onclick = () => {
+    document.getElementById("quizForm").onsubmit = (e) => {
+      e.preventDefault();
       const val = document.getElementById("quizInput").value.trim().toLowerCase();
       const target = quizData[quizIndex].target.toLowerCase();
       const fb = document.getElementById("quizFeedback");
+      
+      if (!val) return;
+
       if (val === target) {
         fb.className = "text-xs font-bold text-emerald-600";
         fb.textContent = "🎉 Benar sekali!";
+        if (!answeredQuestions.has(quizIndex)) {
+          quizScore += 1;
+          answeredQuestions.add(quizIndex);
+          document.getElementById("quizScoreBadge").textContent = `Skor: ${quizScore}`;
+        }
       } else {
         fb.className = "text-xs font-bold text-rose-600";
-        fb.textContent = `❌ Salah. Jawabannya: ${quizData[quizIndex].target}`;
+        fb.textContent = `❌ Kurang tepat. Jawaban: "${quizData[quizIndex].target}"`;
       }
     };
 
@@ -207,11 +273,17 @@
       if (quizIndex < quizData.length - 1) {
         quizIndex++;
         updateQuizView();
-      } else {
-        alert("Kamu sudah menyelesaikan semua soal kuis!");
       }
     };
 
+    document.getElementById("prevQuizBtn").onclick = () => {
+      if (quizIndex > 0) {
+        quizIndex--;
+        updateQuizView();
+      }
+    };
+
+    // --- NAVIGASI TAB ---
     document.getElementById("tabListeningBtn").onclick = () => {
       document.getElementById("listeningSection").classList.remove("hidden");
       document.getElementById("quizSection").classList.add("hidden");
@@ -227,6 +299,7 @@
       updateQuizView();
     };
 
+    // Jalankan inisialisasi awal
     updateListeningView();
   </script>
 </body>
